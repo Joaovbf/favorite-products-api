@@ -1,6 +1,10 @@
 <?php
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('/user', UserController::class);
+Route::apiResource(
+    '/customer',
+    CustomerController::class,
+    ['parameters' => ['customer' => 'id']]
+);

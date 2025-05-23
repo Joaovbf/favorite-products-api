@@ -2,17 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddProductRequest;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use Application\UseCases\AddToFavoriteProductsListUseCase;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class CustomerController extends Controller
 {
+    public function __construct(
+        private readonly AddToFavoriteProductsListUseCase $addToFavoriteProductsListUseCase,
+    )
+    {
+    }
 
     /**
      * Display a listing of the resource.
@@ -33,7 +42,7 @@ class CustomerController extends Controller
             return Response::json(["error" => "Customer #$id not found"], SymfonyResponse::HTTP_NOT_FOUND);
         }
 
-        return new CustomerResource($customer);
+        return ($customer);
     }
 
     /**
@@ -73,5 +82,29 @@ class CustomerController extends Controller
         Customer::destroy($id);
 
         return Response::json(null, SymfonyResponse::HTTP_NO_CONTENT);
+    }
+
+
+    public function addProduct(AddProductRequest $request, int $customerId)
+    {
+        $customer = Customer::find($customerId);
+        $productId = $request->get('product_id');
+
+        if (!$customer) {
+            return Response::json(["error" => "Customer #$customerId not found"], SymfonyResponse::HTTP_NOT_FOUND);
+        }
+        try {
+            $success = $this->addToFavoriteProductsListUseCase->execute($customer, $productId);
+
+            if (!$success) {
+                return Response::json(['error' => "Product #$productId not found"], SymfonyResponse::HTTP_NOT_FOUND);
+            }
+
+            return Response::json(['data' => "Product #$productId added to favorite list"]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage(),$e->getTrace());
+            return Response::json(['error' => "Something unexpected happened"], SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

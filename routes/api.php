@@ -8,3 +8,5 @@ Route::apiResource(
     CustomerController::class,
     ['parameters' => ['customer' => 'id']]
 );
+
+Route::put('/customer/{customerId}/add-product', [CustomerController::class, 'addProduct']);

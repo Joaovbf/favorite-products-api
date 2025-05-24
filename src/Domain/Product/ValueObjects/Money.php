@@ -2,7 +2,7 @@
 
 namespace Domain\Product\ValueObjects;
 
-class Money implements \Stringable
+class Money implements \Stringable, \JsonSerializable
 {
     //Amount in cents
     private int $amount;
@@ -21,4 +21,8 @@ class Money implements \Stringable
         return number_format($this->getAmountAsFloat(), 2, ',', '.');
     }
 
+    public function jsonSerialize(): mixed
+    {
+        return $this->__toString();
+    }
 }

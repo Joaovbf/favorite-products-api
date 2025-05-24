@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use Application\UseCases\AddToFavoriteProductsListUseCase;
+use Application\UseCases\DetailedProductsUseCase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -19,6 +20,7 @@ class CustomerController extends Controller
 {
     public function __construct(
         private readonly AddToFavoriteProductsListUseCase $addToFavoriteProductsListUseCase,
+        private readonly DetailedProductsUseCase $detailedProductsUseCase
     )
     {
     }
@@ -42,7 +44,9 @@ class CustomerController extends Controller
             return Response::json(["error" => "Customer #$id not found"], SymfonyResponse::HTTP_NOT_FOUND);
         }
 
-        return ($customer);
+        $customerDTO = $this->detailedProductsUseCase->execute($customer);
+
+        return Response::json($customerDTO);
     }
 
     /**

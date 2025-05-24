@@ -3,6 +3,7 @@
 namespace Application\UseCases;
 
 use App\Models\Customer;
+use Application\Services\ProductsSyncService;
 use Domain\Product\Interfaces\ProductGatewayInterface;
 use Domain\Product\Mappers\ProductMapper;
 use Domain\Product\Services\FavoriteListHasProductService;
@@ -12,7 +13,8 @@ class AddToFavoriteProductsListUseCase
     public function __construct(
         private readonly ProductGatewayInterface $productGateway,
         private readonly ProductMapper $productMapper,
-        private readonly FavoriteListHasProductService $favoriteListHasProductService
+        private readonly FavoriteListHasProductService $favoriteListHasProductService,
+        private readonly ProductsSyncService $productsSyncService,
     )
     {
     }
@@ -33,9 +35,7 @@ class AddToFavoriteProductsListUseCase
            return true;
         }
 
-        $customer->favorite_products = array_merge($favoriteProductsList, [$product->id]);
-
-        $customer->save();
+        $this->productsSyncService->execute($customer, array_merge($favoriteProductsList, [$product->id]));
 
         return true;
     }

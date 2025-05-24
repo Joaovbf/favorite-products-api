@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AddProductRequest;
+use App\Http\Requests\ChangeProductRequest;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
@@ -85,7 +85,7 @@ class CustomerController extends Controller
     }
 
 
-    public function addProduct(AddProductRequest $request, int $customerId)
+    public function addProduct(ChangeProductRequest $request, int $customerId)
     {
         $customer = Customer::find($customerId);
         $productId = $request->get('product_id');
@@ -105,6 +105,21 @@ class CustomerController extends Controller
             Log::error($e->getMessage(),$e->getTrace());
             return Response::json(['error' => "Something unexpected happened"], SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
 
+    public function removeProduct(ChangeProductRequest $request, int $customerId)
+    {
+        $customer = Customer::find($customerId);
+
+        if (!$customer) {
+            return Response::json(["error" => "Customer #$customerId not found"], SymfonyResponse::HTTP_NOT_FOUND);
+        }
+
+        $productId = $request->get('product_id');
+
+        $customer->favorite_products = array_values(array_diff($customer->favorite_products, [$productId]));
+        $customer->save();
+
+        return Response::json(['data' => "Product #$productId removed from favorite list"]);
     }
 }

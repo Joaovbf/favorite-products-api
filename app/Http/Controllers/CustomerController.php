@@ -27,6 +27,20 @@ class CustomerController extends Controller
 
     /**
      * Display a listing of the resource.
+     *
+     * @OA\Get(
+     *       path="/api/customer",
+     *       tags={"Customer"},
+     *       summary="",todo: summary
+     *       @OA\Response(
+     *           response=200,
+     *           description="List of all customers paginated"
+     *       ),
+     *       @OA\Response(
+     *           response=401,
+     *           description="Invalid Bearer Token"
+     *       )
+     *   )
      */
     public function index()
     {

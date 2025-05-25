@@ -18,6 +18,21 @@ class TokenController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/token",
+     *     tags={"Token"},
+     *     summary="Using Basic HTTP auth generates API token",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Gives the API token"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="username or password are invalid"
+     *     )
+     * )
+     */
     public function getToken(Request $request)
     {
         $token = $request->user()->createToken('token');

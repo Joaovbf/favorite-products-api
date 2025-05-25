@@ -7,6 +7,7 @@ use Application\Services\ProductsSyncService;
 use Domain\Product\Interfaces\ProductGatewayInterface;
 use Domain\Product\Mappers\ProductMapper;
 use Domain\Product\Services\FavoriteListHasProductService;
+use Illuminate\Support\Facades\Cache;
 
 class AddToFavoriteProductsListUseCase
 {
@@ -31,11 +32,11 @@ class AddToFavoriteProductsListUseCase
 
         $favoriteProductsList = $customer->favorite_products;
 
-        if($this->favoriteListHasProductService->execute($product, $favoriteProductsList)) {
-           return true;
-        }
-
-        $this->productsSyncService->execute($customer, array_merge($favoriteProductsList, [$product->id]));
+        Cache::lock('insert_product_' . $productId)->get(
+            fn () => $this->favoriteListHasProductService->execute($product, $favoriteProductsList) ?
+                null :
+                $this->productsSyncService->execute($customer, array_merge($favoriteProductsList, [$product->id]))
+        );
 
         return true;
     }

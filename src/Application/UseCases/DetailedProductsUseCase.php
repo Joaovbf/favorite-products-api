@@ -8,6 +8,7 @@ use Application\DTOs\ProductDTO;
 use Application\Mappers\CustomerMapper;
 use Application\Services\ProductsSyncService;
 use Domain\Product\Interfaces\ProductGatewayInterface;
+use Illuminate\Support\Facades\Cache;
 
 class DetailedProductsUseCase
 {
@@ -24,7 +25,7 @@ class DetailedProductsUseCase
         $ids = array_map(fn (ProductDTO $product) => $product->id, $productDTOs);
 
         if (count($ids) !== count($customer->favorite_products)) {
-            $this->productsSyncService->execute($customer, $ids);
+            $this->productsSyncService->execute($customer, remove: array_diff($customer->favorite_products, $ids));
         }
 
         return $this->customerMapper->toDTO($customer, $productDTOs);

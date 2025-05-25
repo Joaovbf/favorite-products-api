@@ -38,6 +38,19 @@ REDIS_PORT=6379
 
 Ok, now the app is available at http://localhost
 
+## Authentication
+
+The endpoints are authenticated by a Bearer Token. 
+
+To get this token access endpoint `/api/token` with basic http auth with the following credentials:
+
+```json
+{
+    "username": "admin@example.com",
+    "password": "admin"
+}
+```
+
 ## Documentation
 
 This App uses https://github.com/DarkaOnLine/L5-Swagger package to generate the Swagger by Annotations.

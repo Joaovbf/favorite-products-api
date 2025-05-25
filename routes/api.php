@@ -14,9 +14,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         ['parameters' => ['customer' => 'id']]
     );
 
-    Route::put('/customer/{customerId}/add-product', [CustomerController::class, 'addProduct']);
+    Route::post('/customer/{customerId}/add-product', [CustomerController::class, 'addProduct']);
 
-    Route::put('/customer/{customerId}/remove-product', [CustomerController::class, 'removeProduct']);
+    Route::delete('/customer/{customerId}/remove-product', [CustomerController::class, 'removeProduct']);
 
     Route::get('/product/{productId}/customers', [ProductController::class, 'getCustomers']);
 });

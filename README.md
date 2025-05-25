@@ -26,7 +26,7 @@ DB_USERNAME=default
 DB_PASSWORD=secret
 ```
 
-4. Run Migrations `docker compose exec -u laradock workspace php artisan migrate`
+4. Run Migrations `docker compose exec -u laradock workspace php artisan migrate --seed`
 5. Set up Redis connection data
 ```dotenv
 CACHE_STORE=redis
@@ -37,3 +37,13 @@ REDIS_PORT=6379
 ```
 
 Ok, now the app is available at http://localhost
+
+## Documentation
+
+This App uses https://github.com/DarkaOnLine/L5-Swagger package to generate the Swagger by Annotations.
+
+The API Doc is served at http://localhost/api/documentation, when nginx server container is Up.
+
+## Decisions
+
+The main technical choices are expained at [Notion](https://www.notion.so/joaovbf/Explica-o-das-decis-es-1fa44552703580bbb9c7f344806accf3?pvs=4)

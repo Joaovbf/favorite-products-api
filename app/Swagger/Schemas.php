@@ -1,0 +1,249 @@
+<?php
+
+namespace App\Swagger;
+
+/**
+ * @OA\Schema(
+ *     schema="Customer",
+ *     type="object",
+ *     required={"id", "name", "email"},
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         format="int64",
+ *         example=1
+ *     ),
+ *     @OA\Property(
+ *         property="name",
+ *         type="string",
+ *         example="John Doe"
+ *     ),
+ *     @OA\Property(
+ *         property="email",
+ *         type="string",
+ *         format="email",
+ *         example="john.doe@example.com"
+ *     )
+ * )
+ *
+ * @OA\Schema(
+ *     schema="CustomerDetailed",
+ *     type="object",
+ *     required={"id", "name", "email", "favorite_products", "created_at", "updated_at"},
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         format="int64",
+ *         example=1
+ *     ),
+ *     @OA\Property(
+ *         property="name",
+ *         type="string",
+ *         example="John Doe"
+ *     ),
+ *     @OA\Property(
+ *         property="email",
+ *         type="string",
+ *         format="email",
+ *         example="john.doe@example.com"
+ *     ),
+ *     @OA\Property(
+ *         property="favorite_products",
+ *         type="array",
+ *         @OA\Items(
+ *             oneOf={
+ *                 @OA\Schema(ref="#/components/schemas/Product")
+ *             }
+ *         )
+ *     ),
+ *     @OA\Property(
+ *         property="created_at",
+ *         type="string",
+ *         format="date-time",
+ *         example="2024-03-21T12:00:00Z"
+ *     ),
+ *     @OA\Property(
+ *         property="updated_at",
+ *         type="string",
+ *         format="date-time",
+ *         example="2024-03-21T12:00:00Z"
+ *     )
+ * )
+ *
+ * @OA\Schema(
+ *     schema="StoreCustomerRequest",
+ *     type="object",
+ *     required={"name", "email"},
+ *     @OA\Property(
+ *         property="name",
+ *         type="string",
+ *         maxLength=255,
+ *         example="John Doe"
+ *     ),
+ *     @OA\Property(
+ *         property="email",
+ *         type="string",
+ *         format="email",
+ *         maxLength=255,
+ *         example="john.doe@example.com"
+ *     )
+ * )
+ *
+ * @OA\Schema(
+ *     schema="UpdateCustomerRequest",
+ *     type="object",
+ *     @OA\Property(
+ *         property="name",
+ *         type="string",
+ *         maxLength=255,
+ *         example="John Doe"
+ *     ),
+ *     @OA\Property(
+ *         property="email",
+ *         type="string",
+ *         format="email",
+ *         maxLength=255,
+ *         example="john.doe@example.com"
+ *     )
+ * )
+ *
+ * @OA\Schema(
+ *     schema="Product",
+ *     type="object",
+ *     required={"id", "title", "price", "image"},
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         format="int64",
+ *         example=1
+ *     ),
+ *     @OA\Property(
+ *         property="title",
+ *         type="string",
+ *         example="Fjallraven - Foldsack No. 1 Backpack"
+ *     ),
+ *     @OA\Property(
+ *         property="price",
+ *         type="string",
+ *         example="109.95"
+ *     ),
+ *     @OA\Property(
+ *         property="image",
+ *         type="string",
+ *         format="uri",
+ *         example="https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
+ *     ),
+ *     @OA\Property(
+ *         property="rating",
+ *         type="object",
+ *         @OA\Property(
+ *             property="rate",
+ *             type="number",
+ *             format="float",
+ *             example=3.9
+ *         ),
+ *         @OA\Property(
+ *             property="count",
+ *             type="integer",
+ *             example=120
+ *         )
+ *     )
+ * )
+ *
+ * @OA\Schema(
+ *     schema="PaginationLinks",
+ *     type="object",
+ *     @OA\Property(
+ *         property="first",
+ *         type="string",
+ *         format="uri",
+ *         example="http://localhost/api/source?page=1"
+ *     ),
+ *     @OA\Property(
+ *         property="last",
+ *         type="string",
+ *         format="uri",
+ *         example="http://localhost/api/source?page=1"
+ *     ),
+ *     @OA\Property(
+ *         property="prev",
+ *         type="string",
+ *         nullable=true,
+ *         example=null
+ *     ),
+ *     @OA\Property(
+ *         property="next",
+ *         type="string",
+ *         nullable=true,
+ *         example=null
+ *     )
+ * )
+ *
+ * @OA\Schema(
+ *     schema="PaginationMeta",
+ *     type="object",
+ *     @OA\Property(
+ *         property="current_page",
+ *         type="integer",
+ *         example=1
+ *     ),
+ *     @OA\Property(
+ *         property="from",
+ *         type="integer",
+ *         example=1
+ *     ),
+ *     @OA\Property(
+ *         property="last_page",
+ *         type="integer",
+ *         example=1
+ *     ),
+ *     @OA\Property(
+ *         property="links",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="url",
+ *                 type="string",
+ *                 nullable=true,
+ *                 example=null
+ *             ),
+ *             @OA\Property(
+ *                 property="label",
+ *                 type="string",
+ *                 example="&laquo; Previous"
+ *             ),
+ *             @OA\Property(
+ *                 property="active",
+ *                 type="boolean",
+ *                 example=false
+ *             )
+ *         )
+ *     ),
+ *     @OA\Property(
+ *         property="path",
+ *         type="string",
+ *         format="uri",
+ *         example="http://localhost/api/source"
+ *     ),
+ *     @OA\Property(
+ *         property="per_page",
+ *         type="integer",
+ *         example=50
+ *     ),
+ *     @OA\Property(
+ *         property="to",
+ *         type="integer",
+ *         example=2
+ *     ),
+ *     @OA\Property(
+ *         property="total",
+ *         type="integer",
+ *         example=2
+ *     )
+ * )
+ */
+class Schemas
+{
+    // This class is used only for OpenAPI/Swagger documentation
+}

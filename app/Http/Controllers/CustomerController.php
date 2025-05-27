@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use Application\Services\ProductsSyncService;
 use Application\UseCases\AddToFavoriteProductsListUseCase;
 use Application\UseCases\DetailedProductsUseCase;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +21,8 @@ class CustomerController extends Controller
 {
     public function __construct(
         private readonly AddToFavoriteProductsListUseCase $addToFavoriteProductsListUseCase,
-        private readonly DetailedProductsUseCase $detailedProductsUseCase
+        private readonly DetailedProductsUseCase $detailedProductsUseCase,
+        private readonly ProductsSyncService $productsSyncService,
     )
     {
     }
@@ -384,8 +386,7 @@ class CustomerController extends Controller
 
         $productId = $request->get('product_id');
 
-        $customer->favorite_products = array_values(array_diff($customer->favorite_products, [$productId]));
-        $customer->save();
+        $this->productsSyncService->execute($customer, remove: [$productId]);
 
         return Response::json(['data' => "Product #$productId removed from favorite list"]);
     }
